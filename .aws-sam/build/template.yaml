@@ -44,6 +44,10 @@ Resources:
           Properties:
             Path: /transactions
             Method: GET
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: TransactionsTable
       Environment:
         Variables:
           TABLE_NAME:

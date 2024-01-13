@@ -45,6 +45,9 @@ Resources:
           Properties:
             Path: /transactions
             Method: GET
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TransactionsTable            
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
           TABLE_NAME: !Ref TransactionsTable        
