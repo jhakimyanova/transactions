@@ -3,7 +3,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   transactions
   
-  Sample SAM Template for transactions
+  SAM Template for transactions
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -17,14 +17,14 @@ Resources:
     Properties:
       TableName: Transactions
       AttributeDefinitions:
-        - AttributeName: userId # S for String, N for Number, B for Binary
+        - AttributeName: user_id # S for String, N for Number, B for Binary
           AttributeType: S
-        - AttributeName: timeStamp
-          AttributeType: N
+        - AttributeName: ts
+          AttributeType: S
       KeySchema:
-        - AttributeName: userId
+        - AttributeName: user_id
           KeyType: HASH # Partition key
-        - AttributeName: timeStamp
+        - AttributeName: ts
           KeyType: RANGE # Sort key
       BillingMode: PAY_PER_REQUEST
       StreamSpecification:
@@ -34,17 +34,23 @@ Resources:
     Metadata:
       BuildMethod: go1.x
     Properties:
-      CodeUri: transactions/
+      CodeUri: cmd/transactions/
       Handler: bootstrap
       Runtime: provided.al2023
       Architectures:
         - x86_64
       Events:
-        CatchAll:
+        List:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /transactions/{user_id}/{ts}
+            Method: GET
+        Create:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /transactions
-            Method: GET
+            Method: POST
+
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref TransactionsTable            
@@ -57,7 +63,7 @@ Outputs:
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   TransactionsAPI:
-    Description: "API Gateway endpoint URL for Transactions function"
+    Description: "API Gateway endpoint URL for Prod environment for Transactions Function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/transactions/"
   TransactionsFunction:
     Description: "Transactions Lambda Function ARN"
@@ -65,3 +71,4 @@ Outputs:
   TransactionsFunctionIamRole:
     Description: "Implicit IAM Role created for Transactions function"
     Value: !GetAtt TransactionsFunctionRole.Arn
+

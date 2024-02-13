@@ -1,13 +1,15 @@
 {
+    "body": "{}",
     "resource": "/transactions",
-    "path": "/transactions",
+    "path": "/transactions/",
     "httpMethod": "GET",
     "isBase64Encoded": false,
     "queryStringParameters": {
-      "foo": "bar"
+			"limit": "100"
     },
     "pathParameters": {
-      "proxy": "/path/to/resource"
+			"user_id": "julia",
+			"ts": "2024"
     },
     "stageVariables": {
       "baz": "qux"
@@ -52,11 +54,10 @@
         "userAgent": "Custom User Agent String",
         "user": null
       },
-      "path": "/prod/hello",
-      "resourcePath": "/hello",
+      "path": "/prod/transactions",
+      "resourcePath": "/transactions",
       "httpMethod": "POST",
       "apiId": "1234567890",
       "protocol": "HTTP/1.1"
     }
   }
-  
